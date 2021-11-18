@@ -2,10 +2,10 @@
 LOCAL_PATH=PATH_TO_FILE_train_1k.csv
 
 # project id
-PROJECT_ID=XXX
+PROJECT_ID=le-wagon-328012
 
 # bucket name
-BUCKET_NAME=XXX
+BUCKET_NAME=wagon-data-735-berneaud
 
 # bucket directory in which to store the uploaded file (we choose to name this data as a convention)
 BUCKET_FOLDER=data
@@ -95,3 +95,12 @@ clean:
 
 run_api:
 	uvicorn api.fast:app --host 0.0.0.0  # load web server with code autoreload
+
+DOCKER_IMAGE_NAME=taxifare-api
+
+deploy_to_gcs: # Deploys the docker image to google cloud service
+	gcloud run deploy \
+			--image eu.gcr.io/${PROJECT_ID}/${DOCKER_IMAGE_NAME} \
+			--platform managed \
+			--region europe-west1 \
+			--set-env-vars "GOOGLE_APPLICATION_CREDENTIALS=/credentials.json"
